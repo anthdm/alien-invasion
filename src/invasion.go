@@ -22,6 +22,8 @@ const (
 	west
 )
 
+const maxEpoch = 10000
+
 // String implements the Stringer interface.
 func (d direction) String() string {
 	switch d {
@@ -147,12 +149,21 @@ func (c *city) destroy() {
 	c.isDestroyed = true
 }
 
+func (c *city) invadingAlienIDS() []uint32 {
+	ids := make([]uint32, len(c.aliens))
+	for i, a := range c.aliens {
+		ids[i] = a.id
+	}
+	return ids
+}
+
 type simulationState struct {
 	aliens []*alien
 	cities map[string]*city
 }
 
 type simulator struct {
+	currentEpoch  int
 	epochInterval time.Duration
 	worldFile     string
 	state         *simulationState
@@ -206,7 +217,7 @@ loop:
 		}
 	}
 
-	fmt.Printf("The simulation is complete, it took %s\n", time.Since(start))
+	fmt.Printf("The simulation is complete, it took %s and %d epochs\n", time.Since(start), s.currentEpoch)
 }
 
 func (s *simulator) remainingAliens() int {
@@ -231,17 +242,19 @@ func (s *simulator) update() {
 	for _, c := range s.state.cities {
 		if c.isUnderAttack() {
 			c.destroy()
-			fmt.Printf("%s is destroyed! %d remaining alien(s)\n", c.name, s.remainingAliens())
+			fmt.Printf("%s is destroyed! by aliens %v, %d remaining alien(s)\n", c.name, c.invadingAlienIDS(), s.remainingAliens())
 		}
-	}
-
-	if s.isTerminated() {
-		go func() { s.quitch <- struct{}{} }()
 	}
 
 	// reset all aliens inside cities before the next simulation.
 	for _, c := range s.state.cities {
 		c.aliens = []*alien{}
+	}
+
+	s.currentEpoch++
+
+	if s.isTerminated() {
+		go func() { s.quitch <- struct{}{} }()
 	}
 }
 
@@ -252,7 +265,7 @@ func (s *simulator) isTerminated() bool {
 			aliensAlive++
 		}
 	}
-	return aliensAlive < 2
+	return aliensAlive < 2 || s.currentEpoch == maxEpoch
 }
 
 func randomDirection() direction {

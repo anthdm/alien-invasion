@@ -1,0 +1,16 @@
+durotar north=stranglethornvale east=barrens south=thunderbluff west=tarrenmill
+barrens north=silverspineforest east=undercity south=ogrimmar west=durotar
+undercity north=darkshore east=tarrenmill south=bootybay west=barrens
+tarrenmill north=brill east=durotar south=blackrockmountain west=undercity
+thunderbluff north=durotar east=ogrimmar south=moltencore west=blackrockmountain
+ogrimmar north=barrens east=bootybay south=searinggorge west=thunderbluff
+bootybay north=undercity east=blackrockmountain south=winterspring west=ogrimmar
+blackrockmountain north=tarrenmill east=thunderbluff south=arathihighlands west=bootybay
+moltencore north=thunderbluff east=searinggorge south=stranglethornvale west=arathihighlands
+searinggorge north=ogrimmar east=winterspring south=silverspineforest west=moltencore
+winterspring north=bootybay east=arathihighlands south=darkshore west=searinggorge
+arathihighlands north=blackrockmountain east=moltencore south=brill west=winterspring
+stranglethornvale north=moltencore east=silverspineforest south=durotar west=brill
+silverspineforest north=searinggorge east=darkshore south=barrens west=stranglethornvale
+darkshore north=winterspring east=brill south=undercity west=silverspineforest
+brill north=arathihighlands east=stranglethornvale south=tarrenmill west=darkshore

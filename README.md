@@ -1,4 +1,5 @@
 # Alien invasion
+
 A simulation on how aliens could invade planets and destroy kindoms, written in the Go language.
 
 ```
@@ -50,6 +51,7 @@ make
 After running the commands above, the binary program is available as `bin/invasion`
 
 ## Tests
+
 It's always a good idea to run tests before running fresh cloned programs.
 
 ```
@@ -63,12 +65,14 @@ make test
 ```
 
 default values:
+
 - aliens: 3
 - interval: 1 second
 - world: data/world.txt
 
 ## Extra (world generator)
-Creating world files by hand is a slow and tidious process. That's why I left a simple and quick script in the `worldgen` folder to generate those world files automatically. 
+
+Creating world files by hand is a slow and tidious process. That's why I left a simple and quick script in the `worldgen` folder to generate those world files automatically.
 
 How to use
 

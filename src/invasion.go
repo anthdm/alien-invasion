@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -218,6 +219,8 @@ loop:
 	}
 
 	fmt.Printf("The simulation is complete, it took %s and %d epochs\n", time.Since(start), s.currentEpoch)
+	fmt.Println()
+	fmt.Println(s.dumpCurrentWorld())
 }
 
 func (s *simulator) remainingAliens() int {
@@ -266,6 +269,32 @@ func (s *simulator) isTerminated() bool {
 		}
 	}
 	return aliensAlive < 2 || s.currentEpoch == maxEpoch
+}
+
+// instead of printing this directly to stdout, we use a buffer, so we can
+// test the output more easily.
+func (s *simulator) dumpCurrentWorld() string {
+	partialBuffer := bytes.Buffer{}
+	worldBuffer := new(bytes.Buffer)
+
+	for _, c := range s.state.cities {
+		if c.isDestroyed {
+			continue
+		}
+
+		for dir, name := range c.adjacent {
+			city := s.state.cities[name]
+			if !city.isDestroyed {
+				str := fmt.Sprintf("%s=%s ", strings.ToLower(dir.String()), city.name)
+				partialBuffer.WriteString(str)
+			}
+		}
+
+		fmt.Fprintf(worldBuffer, "%s %s\n", c.name, partialBuffer.Bytes())
+		partialBuffer.Reset()
+	}
+
+	return worldBuffer.String()
 }
 
 func randomDirection() direction {

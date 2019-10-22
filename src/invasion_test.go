@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -88,6 +89,25 @@ func TestCityDestroy(t *testing.T) {
 	for _, a := range city.aliens {
 		assert.False(t, a.isAlive)
 	}
+}
+
+func TestDumpCurrentWorld(t *testing.T) {
+	cities, err := buildCitiesFromFile("../data/world.txt")
+	assert.Nil(t, err)
+
+	sim := &simulator{
+		state: newSimulationState(cities),
+	}
+	cityA := randomCity(cities)
+	cityB := randomCity(cities)
+
+	cityA.destroy()
+	cityB.destroy()
+
+	world := sim.dumpCurrentWorld()
+
+	assert.False(t, strings.Contains(world, cityA.name))
+	assert.False(t, strings.Contains(world, cityB.name))
 }
 
 func newSimulationState(cities map[string]*city, aliens ...*alien) *simulationState {
